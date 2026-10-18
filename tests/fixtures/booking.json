@@ -1,0 +1,9 @@
+{
+  "booking_options": [
+    { "together": { "book_with": "Qatar Airways", "price": 7890, "option_title": "Econômica" } },
+    { "together": { "book_with": "Decolar", "price": 7650 } },
+    { "together": { "book_with": "Decolar", "price": 7720 } },
+    { "together": { "book_with": "Kiwi.com", "price": 7980 } },
+    { "departing": { "book_with": "Qatar Airways", "price": 3900 }, "returning": { "book_with": "Qatar Airways", "price": 3950 } }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "best_flights": [
+    {
+      "flights": [
+        { "departure_airport": { "id": "BKK", "time": "2027-05-02 02:10" }, "arrival_airport": { "id": "DOH", "time": "2027-05-02 05:50" }, "flight_number": "QR 837" },
+        { "departure_airport": { "id": "DOH", "time": "2027-05-02 08:00" }, "arrival_airport": { "id": "GRU", "time": "2027-05-02 16:40" }, "flight_number": "QR 773" }
+      ],
+      "price": 7890,
+      "booking_token": "BOOK_TOKEN_1"
+    },
+    {
+      "flights": [
+        { "departure_airport": { "id": "BKK", "time": "2027-05-02 23:00" }, "arrival_airport": { "id": "DOH", "time": "2027-05-03 02:40" }, "flight_number": "QR 833" },
+        { "departure_airport": { "id": "DOH", "time": "2027-05-03 07:00" }, "arrival_airport": { "id": "GRU", "time": "2027-05-03 15:40" }, "flight_number": "QR 775" }
+      ],
+      "price": 8100,
+      "booking_token": "BOOK_TOKEN_2"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+name: Monitor GRU → BKK (Qatar / Decolar)
+
+on:
+  schedule:
+    # Horário de Brasília (UTC-3, sem horário de verão): 08h, 14h e 20h
+    - cron: '0 11 * * *'
+    - cron: '0 17 * * *'
+    - cron: '0 23 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write # para gravar data/history.json
+
+concurrency:
+  group: flight-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci --omit=dev
+
+      - name: Coletar preços e enviar e-mail
+        run: node src/run.js
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          # opcionais (Settings → Variables): OUTBOUND_DATE, RETURN_DATE, ALERT_DROP_PCT...
+          OUTBOUND_DATE: ${{ vars.OUTBOUND_DATE }}
+          RETURN_DATE: ${{ vars.RETURN_DATE }}
+          ALERT_DROP_PCT: ${{ vars.ALERT_DROP_PCT }}
+          ALERT_MIN_DROP: ${{ vars.ALERT_MIN_DROP }}
+          SEND_DAILY_DIGEST: ${{ vars.SEND_DAILY_DIGEST }}
+
+      - name: Gerar gráfico (docs/index.html)
+        if: always()
+        run: node src/chart.js
+
+      - name: Salvar histórico e gráfico
+        if: always()
+        run: |
+          git config user.name "flight-monitor"
+          git config user.email "flight-monitor@users.noreply.github.com"
+          git add data/history.json docs/index.html
+          git diff --cached --quiet || (git commit -m "chore: atualiza histórico de preços" && git pull --rebase && git push)

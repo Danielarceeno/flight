@@ -1,0 +1,16 @@
+{
+  "name": "flight-monitor-qatar",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Monitora Qatar Airways (e vendedores como Decolar) GRU → BKK e envia e-mail com os melhores preços.",
+  "scripts": {
+    "start": "node src/run.js",
+    "dry-run": "DRY_RUN=1 node src/run.js",
+    "chart": "node src/chart.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}

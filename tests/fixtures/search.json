@@ -1,0 +1,36 @@
+{
+  "best_flights": [
+    {
+      "flights": [
+        { "departure_airport": { "id": "GRU", "time": "2027-04-11 23:10" }, "arrival_airport": { "id": "DOH", "time": "2027-04-12 21:40" }, "flight_number": "QR 774", "airline": "Qatar Airways" },
+        { "departure_airport": { "id": "DOH", "time": "2027-04-13 01:25" }, "arrival_airport": { "id": "BKK", "time": "2027-04-13 12:05" }, "flight_number": "QR 836", "airline": "Qatar Airways" }
+      ],
+      "layovers": [{ "id": "DOH", "duration": 225 }],
+      "total_duration": 1255,
+      "price": 7890,
+      "departure_token": "DEP_TOKEN_QR_7890"
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        { "departure_airport": { "id": "GRU", "time": "2027-04-11 22:00" }, "arrival_airport": { "id": "DOH", "time": "2027-04-12 20:00" }, "flight_number": "QR 778" },
+        { "departure_airport": { "id": "DOH", "time": "2027-04-13 02:00" }, "arrival_airport": { "id": "BKK", "time": "2027-04-13 12:40" }, "flight_number": "QR 832" }
+      ],
+      "layovers": [{ "id": "DOH", "duration": 360 }],
+      "total_duration": 1360,
+      "price": 8450,
+      "departure_token": "DEP_TOKEN_QR_8450"
+    },
+    {
+      "flights": [
+        { "departure_airport": { "id": "GRU", "time": "2027-04-11 20:00" }, "arrival_airport": { "id": "IST", "time": "2027-04-12 14:00" }, "flight_number": "TK 16" },
+        { "departure_airport": { "id": "IST", "time": "2027-04-12 17:00" }, "arrival_airport": { "id": "BKK", "time": "2027-04-13 07:00" }, "flight_number": "TK 68" }
+      ],
+      "total_duration": 1200,
+      "price": 6100,
+      "departure_token": "DEP_TOKEN_TK"
+    }
+  ],
+  "price_insights": { "lowest_price": 6100, "price_level": "typical", "typical_price_range": [7000, 9500] }
+}
