@@ -26,10 +26,23 @@ Toda coleta também gera `docs/index.html`: uma página estática (sem dependên
 
 O workflow já commita `docs/index.html` a cada execução (`npm run chart` localmente gera a mesma página a partir de `data/history.json`).
 
+> O GitHub Pages gratuito só funciona em repositório **público** (em repositório privado exige GitHub Pro/Team/Enterprise). Os secrets continuam protegidos do mesmo jeito em repositório público — só o código, o histórico de preços e o gráfico ficam visíveis pra qualquer pessoa.
+
+## Extensão do Chrome (atalho pro painel)
+A pasta `extension/` tem uma extensão bem simples: um ícone na barra do Chrome que, ao clicar, abre o painel do GitHub Pages em uma nova aba. Não tem nenhuma permissão além de abrir aba.
+
+Instalar (sempre manual, o Chrome não permite automatizar isso):
+1. Abra `chrome://extensions`.
+2. Ative **"Modo do desenvolvedor"**.
+3. **"Carregar sem compactação"** → selecione a pasta `extension/`.
+4. Fixe o ícone na barra pelo menu de extensões (🧩).
+
+Se o endereço do GitHub Pages mudar, edite a constante `MONITOR_URL` em `extension/background.js`.
+
 ## Configuração (uma vez, ~10 min)
 1. **SerpApi:** crie conta em serpapi.com e copie a API key (o plano grátis tem cota mensal limitada; veja abaixo).
 2. **E-mail (SMTP):** para Gmail, ative a verificação em duas etapas e crie uma *senha de app* em myaccount.google.com/apppasswords.
-3. Crie um repositório **privado** no GitHub e envie esta pasta.
+3. Crie um repositório no GitHub e envie esta pasta — **privado** se você não for usar o gráfico do GitHub Pages, **público** se for (ver aviso acima).
 4. Em *Settings → Secrets and variables → Actions → Secrets*, crie:
 
 | Secret | Valor |

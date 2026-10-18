@@ -39,6 +39,7 @@ Tudo que decide *se* e *o que* alertar (`alert.js`) é puro — recebe históric
 | `src/util.js` | `brl()` e `esc()` compartilhados entre `email.js` e `chart.js`. |
 | `src/chart.js` | `buildChartHtml()` (puro, testável) + CLI que lê o histórico e escreve `docs/index.html`. |
 | `src/run.js` | Orquestrador: `runOnce()` (testável, recebe tudo por injeção) e `main()` (CLI real, com `DRY_RUN`). |
+| `extension/` | Extensão Chrome (Manifest V3) independente do monitor: só abre o painel do GitHub Pages em nova aba ao clicar no ícone. Ver seção própria abaixo. |
 
 ## Decisões importantes (porquês que não estão óbvios no código)
 
@@ -49,6 +50,15 @@ Tudo que decide *se* e *o que* alertar (`alert.js`) é puro — recebe históric
 - **O gráfico (`chart.js`) é standalone, sem libs externas** (SVG desenhado via JS vanilla) de propósito: GitHub Pages serve arquivo estático, sem build step, sem dependência de CDN caindo.
 - **O commit do histórico/gráfico no workflow usa `if: always()`** — mesmo se a coleta falhar, o histórico (que já registra o erro) e o gráfico são salvos, pra não perder visibilidade de falhas.
 
+## Extensão do Chrome (`extension/`)
+
+Atalho de 1 clique pro painel publicado — não tem relação funcional com o monitor em si, só aponta pra URL fixa dele.
+
+- `manifest.json` — Manifest V3, sem `permissions` (não lê nem modifica abas existentes, só cria uma nova).
+- `background.js` — service worker com `chrome.action.onClicked` → `chrome.tabs.create({ url: MONITOR_URL })`. `MONITOR_URL` está hardcoded como `https://danielarceeno.github.io/flight/`; se o usuário/repo do GitHub Pages mudar, é só editar essa constante.
+- `icons/*.png` — gerados por `generate-icons.js` (PNG escrito à mão via `node:zlib`, zero dependência de imagem/canvas). Rodar de novo com `node extension/generate-icons.js` se quiser trocar o desenho do ícone.
+- Instalação é sempre manual (carregar sem compactação em `chrome://extensions`) — não existe forma de automatizar isso, pois é uma página interna do Chrome fora do alcance de automação de browser.
+
 ## Testes
 
 - `tests/*.test.js` com `node --test` (sem framework externo). `tests/helpers.js` tem os fakes (`fakeFetch`, `entry`) e as fixtures ficam em `tests/fixtures/*.json` (respostas reais da SerpApi, capturadas/simuladas).
@@ -57,7 +67,8 @@ Tudo que decide *se* e *o que* alertar (`alert.js`) é puro — recebe históric
 
 ## Estado atual / pendências conhecidas
 
-- Repositório git **ainda não inicializado** neste diretório local (ver guia de deploy abaixo).
-- `docs/index.html` existe mas está vazio (0 leituras) até a primeira coleta real rodar.
-- Nenhuma chamada real à SerpApi foi feita ainda neste projeto — a validação final é a primeira execução via `workflow_dispatch` (ver README, seção de configuração).
+- **Em produção.** Repositório: `https://github.com/Danielarceeno/flight` (**público** — necessário pra GitHub Pages gratuito; secrets continuam protegidos normalmente, só o código/histórico/gráfico ficam visíveis). Painel ao vivo: `https://danielarceeno.github.io/flight/`.
+- Workflow (`monitor.yml`) validado rodando de verdade (`workflow_dispatch`) com os 6 secrets configurados; primeiras coletas reais já acharam preços via Expedia/Qatar e geraram alertas corretamente. O cron 3x/dia (08h/14h/20h BRT) está ativo.
+- **Pendência de segurança:** a senha de app do Gmail usada em `SMTP_PASS` foi colada em uma conversa de chat durante a configuração inicial. Recomendado revogar essa senha específica em `myaccount.google.com/apppasswords`, gerar uma nova e atualizar só o secret `SMTP_PASS` no GitHub — ainda não foi feito.
+- Extensão Chrome (`extension/`) criada e documentada acima; instalação local é manual (ver README ou instruções passadas na conversa de criação).
 - Limitações conhecidas (já documentadas no README): Decolar só aparece se o Google Flights listar; GitHub Actions pode atrasar execuções agendadas.
