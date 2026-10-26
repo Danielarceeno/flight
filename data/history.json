@@ -1007,6 +1007,41 @@
         "price": 8287
       },
       "deep": false
+    },
+    {
+      "ts": "2026-10-26T00:57:28.620Z",
+      "period": "night",
+      "qatar": {
+        "price": 7944,
+        "from": "GRU",
+        "to": "BKK",
+        "departs": "2027-04-11 20:30",
+        "arrives": "2027-04-13 13:20",
+        "stops": 1,
+        "layovers": [
+          "DOH"
+        ],
+        "totalMinutes": 1850,
+        "flightNumbers": [
+          "QR 780",
+          "QR 836"
+        ]
+      },
+      "sellers": [],
+      "insights": {
+        "level": null,
+        "typical": null
+      },
+      "overall": {
+        "price": 7944,
+        "airline": "Qatar Airways",
+        "flightNumber": "QR 780"
+      },
+      "best": {
+        "source": "Qatar Airways (Google Flights)",
+        "price": 7944
+      },
+      "deep": false
     }
   ]
 }
