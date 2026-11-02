@@ -101,6 +101,27 @@ test('regressão: sequência manhã → tarde → noite com preço caindo gera o
   assert.equal(r3.entry.best.price, 6500);
 });
 
+test('regressão: env.PERIOD força a busca profunda mesmo se o GitHub atrasar o cron da manhã', async () => {
+  // O workflow fixa PERIOD='morning' pelo cron agendado (0 11 * * *). Sem isso, se a
+  // execução real atrasar pra depois das 12h BRT, periodNow() classificaria como
+  // "afternoon" e a Decolar nunca seria buscada. Ver .github/workflows/monitor.yml.
+  const historyPath = await tmpHistory();
+  const existing = JSON.stringify({ entries: [{ ts: '2026-10-01T11:00:00.000Z', period: 'morning', best: { source: 'Qatar Airways', price: 8000 } }] });
+  await (await import('node:fs/promises')).writeFile(historyPath, existing);
+
+  const r = await runOnce({
+    env: { ...ENV, PERIOD: 'morning' },
+    now: new Date('2026-10-02T18:30:00Z'), // 15h30 BRT: periodNow() sozinho diria "afternoon"
+    fetchImpl: fakeFetch(),
+    sender: async () => {},
+    historyPath,
+  });
+
+  assert.equal(r.entry.period, 'morning');
+  assert.equal(r.entry.deep, true);
+  assert.equal(r.entry.decolar, 7650); // só aparece porque a busca profunda rodou
+});
+
 test('regressão: gráfico gerado a partir de um histórico fixo contém os valores esperados', () => {
   const route = loadRoute({});
   const history = [

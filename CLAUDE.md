@@ -49,6 +49,7 @@ Tudo que decide *se* e *o que* alertar (`alert.js`) é puro — recebe históric
 - **`cheapestOverall` não custa busca extra** — usa a mesma resposta já buscada (`first`), só sem o filtro de companhia. É só contexto no e-mail.
 - **O gráfico (`chart.js`) é standalone, sem libs externas** (SVG desenhado via JS vanilla) de propósito: GitHub Pages serve arquivo estático, sem build step, sem dependência de CDN caindo.
 - **O commit do histórico/gráfico no workflow usa `if: always()`** — mesmo se a coleta falhar, o histórico (que já registra o erro) e o gráfico são salvos, pra não perder visibilidade de falhas.
+- **`PERIOD` é definido explicitamente no workflow a partir de `github.event.schedule`, não só deduzido pelo horário real** (`run.js`: `env.PERIOD || periodNow(...)`). Achado em produção: o GitHub atrasa o cron das 08h em várias horas quase todo dia (visto no histórico real — execuções "da manhã" caindo 13h-15h BRT), o que fazia `periodNow()` classificar como `afternoon` e a busca profunda (que acha a Decolar) quase nunca rodar. Fixar pelo cron agendado resolve isso; `workflow_dispatch` (sem `schedule`) continua caindo no detector por horário real.
 
 ## Extensão do Chrome (`extension/`)
 

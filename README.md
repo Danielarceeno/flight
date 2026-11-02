@@ -74,5 +74,5 @@ SERPAPI_KEY=... DRY_RUN=1 npm start   # busca real, grava o e-mail em out/last-e
 ## Limitações conhecidas
 - Os testes usam respostas simuladas no formato documentado do SerpApi; a primeira execução real é a validação final. Se algum campo vier diferente, o monitor registra o erro no histórico e te avisa após 3 falhas.
 - A Decolar só aparece se o Google Flights a listar como vendedora naquele voo.
-- O GitHub pode atrasar execuções agendadas em alguns minutos nos horários de pico.
+- O GitHub pode atrasar execuções agendadas em **horas**, não só minutos — em repositórios com pouco uso isso é comum, especialmente no cron das 08h. Por isso o workflow fixa o período (manhã/tarde/noite) pelo **horário agendado**, não pelo horário real de execução (variável `PERIOD` em `monitor.yml`) — senão a busca "profunda" que acha a Decolar nunca rodaria.
 - Os links do e-mail levam à busca no Google Flights e às páginas iniciais da Qatar e da Decolar.

@@ -31,6 +31,12 @@ jobs:
       - name: Coletar preços e enviar e-mail
         run: node src/run.js
         env:
+          # O GitHub pode atrasar o cron em horas (não só minutos). Fixamos o período
+          # pelo horário AGENDADO (qual cron disparou), não pelo horário real de
+          # execução — senão a busca "profunda" das 08h (que acha a Decolar) perde a
+          # janela da manhã e nunca roda. workflow_dispatch não tem schedule: cai no
+          # detector por horário real (src/run.js).
+          PERIOD: ${{ github.event.schedule == '0 11 * * *' && 'morning' || github.event.schedule == '0 17 * * *' && 'afternoon' || github.event.schedule == '0 23 * * *' && 'night' || '' }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
