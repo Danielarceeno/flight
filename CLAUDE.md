@@ -50,6 +50,8 @@ Tudo que decide *se* e *o que* alertar (`alert.js`) é puro — recebe históric
 - **O gráfico (`chart.js`) é standalone, sem libs externas** (SVG desenhado via JS vanilla) de propósito: GitHub Pages serve arquivo estático, sem build step, sem dependência de CDN caindo.
 - **O commit do histórico/gráfico no workflow usa `if: always()`** — mesmo se a coleta falhar, o histórico (que já registra o erro) e o gráfico são salvos, pra não perder visibilidade de falhas.
 - **`PERIOD` é definido explicitamente no workflow a partir de `github.event.schedule`, não só deduzido pelo horário real** (`run.js`: `env.PERIOD || periodNow(...)`). Achado em produção: o GitHub atrasa o cron das 08h em várias horas quase todo dia (visto no histórico real — execuções "da manhã" caindo 13h-15h BRT), o que fazia `periodNow()` classificar como `afternoon` e a busca profunda (que acha a Decolar) quase nunca rodar. Fixar pelo cron agendado resolve isso; `workflow_dispatch` (sem `schedule`) continua caindo no detector por horário real.
+- **`entry.insights` (classificação `price_level`/`typical` do Google) vem de graça na 1ª chamada da SerpApi** e é mostrado no e-mail via `insightsLine()` em `email.js` — não é específico da Qatar, é um contexto geral da busca (rota/data), por isso fica solto na entrada, fora de `qatar`/`sellers`.
+- **O workflow commita a cada execução de propósito** (além de registrar o histórico) — isso também evita que o GitHub desative o cron por inatividade do repo (desligamento automático acontece após 60 dias sem push). Ver nota em README → Limitações conhecidas.
 
 ## Extensão do Chrome (`extension/`)
 

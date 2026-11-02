@@ -2,6 +2,17 @@ import { googleFlightsUrl } from './config.js';
 import { brl, esc } from './util.js';
 
 const PERIOD = { morning: 'manhã', afternoon: 'tarde', night: 'noite', manual: 'manual' };
+const PRICE_LEVEL = { low: 'baixo', typical: 'típico', high: 'alto' };
+
+// Classificação do Google Flights pro preço da busca (vem de graça, já incluída
+// na primeira chamada à SerpApi) — não é específica da Qatar nem do "best", é um
+// contexto geral da rota/data.
+function insightsLine(insights, currency) {
+  if (!insights?.level) return null;
+  const label = PRICE_LEVEL[insights.level] || insights.level;
+  const range = Array.isArray(insights.typical) && insights.typical.length === 2 ? ` (faixa típica: ${brl(insights.typical[0], currency)}–${brl(insights.typical[1], currency)})` : '';
+  return `Google avalia o preço desta busca como ${label}${range}`;
+}
 
 function duration(min) {
   if (!Number.isFinite(min)) return '—';
@@ -50,6 +61,8 @@ export function buildEmail({ decision, entry, history = [], stats, route }) {
   lines.push(`Melhor preço agora: ${brl(entry.best.price, cur)} (${entry.best.source})`);
   if (decision.pct > 0 && decision.prev) lines.push(`Antes: ${brl(decision.prev, cur)} (queda de ${decision.pct.toFixed(1)}%)`);
   if (stats?.min != null) lines.push(`Menor preço registrado: ${brl(Math.min(stats.min, entry.best.price), cur)}`);
+  const insights = insightsLine(entry.insights, cur);
+  if (insights) lines.push(insights);
   if (q) {
     lines.push(`Qatar Airways: ${brl(q.price, cur)} · ${q.stops} parada(s)${q.layovers.length ? ' em ' + q.layovers.join(', ') : ''} · ida ${duration(q.totalMinutes)}`);
   }
@@ -86,6 +99,7 @@ export function buildEmail({ decision, entry, history = [], stats, route }) {
     <div style="font-size:34px;font-weight:bold;color:#FF7A1A">${brl(entry.best.price, cur)}</div>
     <div style="color:#5b6577;margin-bottom:12px">via ${esc(entry.best.source)}${decision.pct > 0 && decision.prev ? ` · antes ${brl(decision.prev, cur)} (−${decision.pct.toFixed(1)}%)` : ''}</div>
     ${stats?.min != null ? `<p style="margin:6px 0">Menor preço registrado: <b>${brl(Math.min(stats.min, entry.best.price), cur)}</b></p>` : ''}
+    ${insightsLine(entry.insights, cur) ? `<p style="margin:6px 0;color:#5b6577">${esc(insightsLine(entry.insights, cur))}</p>` : ''}
     ${q ? `<p style="margin:6px 0">Qatar Airways: <b>${brl(q.price, cur)}</b> · ${q.stops} parada(s)${q.layovers.length ? ' em ' + esc(q.layovers.join(', ')) : ''} · ida ${duration(q.totalMinutes)}</p>` : ''}
     ${sellerRows ? `<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:14px">${sellerRows}</table>` : ''}
     ${entry.overall && entry.overall.price < entry.best.price ? `<p style="margin:6px 0;color:#5b6577">Preço mais barato na busca (qualquer companhia): <b>${brl(entry.overall.price, cur)}</b>${entry.overall.airline ? ` (${esc(entry.overall.airline)})` : ''}</p>` : ''}

@@ -106,3 +106,18 @@ test('e-mail mostra o menor preço geral só quando mais barato que o melhor can
   assert.ok(!m2.text.includes('Preço mais barato na busca'));
   assert.ok(!m2.html.includes('Preço mais barato na busca'));
 });
+
+test('e-mail mostra a avaliação de preço do Google (price_insights) quando disponível', () => {
+  const route = loadRoute({});
+  const base = { ...entry(7890, { period: 'morning' }), best: { source: 'Qatar Airways', price: 7890 }, sellers: [] };
+
+  const comFaixa = { ...base, insights: { level: 'low', typical: [8000, 9500] } };
+  const m1 = buildEmail({ decision: { kind: 'first', alert: true }, entry: comFaixa, stats: {}, route });
+  assert.match(m1.text, /Google avalia o preço desta busca como baixo.*8\.000.*9\.500/);
+  assert.match(m1.html, /Google avalia o preço desta busca como baixo/);
+
+  const semInsights = { ...base, insights: { level: null, typical: null } };
+  const m2 = buildEmail({ decision: { kind: 'first', alert: true }, entry: semInsights, stats: {}, route });
+  assert.ok(!m2.text.includes('Google avalia'));
+  assert.ok(!m2.html.includes('Google avalia'));
+});
