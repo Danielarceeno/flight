@@ -2353,6 +2353,86 @@
         "price": 8799
       },
       "deep": false
+    },
+    {
+      "ts": "2026-11-06T17:52:19.898Z",
+      "period": "morning",
+      "qatar": {
+        "price": 8981,
+        "from": "GRU",
+        "to": "BKK",
+        "departs": "2027-04-11 10:40",
+        "arrives": "2027-04-12 19:05",
+        "stops": 1,
+        "layovers": [
+          "DOH"
+        ],
+        "totalMinutes": 1345,
+        "flightNumbers": [
+          "QR 786",
+          "QR 828"
+        ]
+      },
+      "sellers": [
+        {
+          "name": "Expedia",
+          "price": 8101
+        },
+        {
+          "name": "Decolar",
+          "price": 8652
+        },
+        {
+          "name": "Flightnetwork",
+          "price": 8823
+        },
+        {
+          "name": "Gotogate",
+          "price": 8827
+        },
+        {
+          "name": "Mytrip",
+          "price": 8828
+        },
+        {
+          "name": "Qatar Airways",
+          "price": 8981
+        },
+        {
+          "name": "Kiwi.com",
+          "price": 9004
+        },
+        {
+          "name": "Booking.com",
+          "price": 9095
+        },
+        {
+          "name": "Trip.com",
+          "price": 9136
+        },
+        {
+          "name": "123Milhas",
+          "price": 20477
+        }
+      ],
+      "insights": {
+        "level": "typical",
+        "typical": [
+          8100,
+          11000
+        ]
+      },
+      "overall": {
+        "price": 8981,
+        "airline": "Qatar Airways",
+        "flightNumber": "QR 786"
+      },
+      "best": {
+        "source": "Expedia",
+        "price": 8101
+      },
+      "decolar": 8652,
+      "deep": true
     }
   ]
 }
